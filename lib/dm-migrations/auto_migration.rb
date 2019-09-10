@@ -1,3 +1,4 @@
+# Includes patch from https://gist.github.com/RipTheJacker/740076
 require 'dm-core'
 
 module DataMapper
@@ -143,7 +144,7 @@ module DataMapper
       def auto_upgrade!(repository_name = self.repository_name)
         assert_valid(true)
         base_model = self.base_model
-        if base_model == self
+        if base_model == self || (self.storage_names[repository_name] != base_model.storage_names[repository_name])
           repository(repository_name).upgrade_model_storage(self)
         else
           base_model.auto_upgrade!(repository_name)
@@ -160,7 +161,7 @@ module DataMapper
       def auto_migrate_down!(repository_name = self.repository_name)
         assert_valid(true)
         base_model = self.base_model
-        if base_model == self
+        if base_model == self || (self.storage_names[repository_name] != base_model.storage_names[repository_name])
           repository(repository_name).destroy_model_storage(self)
         else
           base_model.auto_migrate_down!(repository_name)
@@ -175,7 +176,7 @@ module DataMapper
       def auto_migrate_up!(repository_name = self.repository_name)
         assert_valid(true)
         base_model = self.base_model
-        if base_model == self
+        if base_model == self || (self.storage_names[repository_name] != base_model.storage_names[repository_name])
           repository(repository_name).create_model_storage(self)
         else
           base_model.auto_migrate_up!(repository_name)
